@@ -18,14 +18,14 @@ public class NettyUser {
 
     public static void main(String[] args) throws InterruptedException {
         NettyUser user = new NettyUser();
-        user.connect(HOST, PORT);
+        user.connect();
     }
 
-    public void connect(String host, int port) throws InterruptedException {
+    public void connect() throws InterruptedException {
         try {
             Bootstrap b = configure();
 
-            ChannelFuture f = b.connect(host, port).sync();
+            ChannelFuture f = b.connect(HOST, PORT).sync();
             Channel channel = f.sync().channel();
             Scanner scanner = new Scanner(System.in);
             System.out.print("Write message to server: ");
