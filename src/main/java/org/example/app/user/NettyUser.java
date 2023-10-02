@@ -1,13 +1,13 @@
 package org.example.app.user;
 
 import io.netty.bootstrap.Bootstrap;
-import io.netty.channel.Channel;
-import io.netty.channel.ChannelFuture;
-import io.netty.channel.EventLoopGroup;
+import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
 
 import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class NettyUser {
 
@@ -16,12 +16,14 @@ public class NettyUser {
 
     private final EventLoopGroup group = new NioEventLoopGroup();
 
-    public static void main(String[] args) throws InterruptedException {
+    private static final Logger LOGGER = Logger.getLogger(NettyUser.class.getName());
+
+    public static void main(String[] args) {
         NettyUser user = new NettyUser();
         user.connect();
     }
 
-    public void connect() throws InterruptedException {
+    public void connect() {
         try {
             Bootstrap b = configure();
 
@@ -40,6 +42,8 @@ public class NettyUser {
             }
 
             f.channel().closeFuture().sync();
+        } catch (InterruptedException e) {
+            LOGGER.log(Level.WARNING, "Connection was interrupted");
         } finally {
             releaseResources();
         }
