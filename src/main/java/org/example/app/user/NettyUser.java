@@ -7,6 +7,8 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
 
+import java.util.Scanner;
+
 public class NettyUser {
 
     private static final String HOST = "127.0.0.1";
@@ -24,11 +26,18 @@ public class NettyUser {
             Bootstrap b = configure();
 
             ChannelFuture f = b.connect(host, port).sync();
-
-            String input = "Tom";
             Channel channel = f.sync().channel();
-            channel.writeAndFlush(input);
-            channel.flush();
+            Scanner scanner = new Scanner(System.in);
+            System.out.print("Write message to server: ");
+
+            for (int i = 0; i < 15; i++) {
+                String input = scanner.nextLine();
+                if (input.equalsIgnoreCase("quit")) {
+                    channel.writeAndFlush(input.toLowerCase());
+                    break;
+                }
+                channel.writeAndFlush(input);
+            }
 
             f.channel().closeFuture().sync();
         } finally {
